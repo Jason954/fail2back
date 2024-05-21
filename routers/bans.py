@@ -6,6 +6,7 @@ from fastapi import APIRouter
 from dependencies import send_command, query_db
 from models.ban import Ban
 from models.ip import Ip
+from models.jail import Jail
 from utils.check import check_ip
 from utils.convert import convert_query_to_ban_model
 
@@ -30,6 +31,16 @@ async def read_bans():
     return [Ip(ip=ip) for ip in banned_return]
 
 
+@router.get("/bans/{ip}")
+async def get_jails_by_banned_ip(ip: str):
+    check_ip(ip)
+    banned = send_command(f"banned {ip}")
+    jail_list = []
+    for jail in banned:
+        jail_list.extend(jail)
+    return jail_list
+
+
 @router.post("/unban")
 async def unban(ip: str):
     if ip == "all":
@@ -37,5 +48,3 @@ async def unban(ip: str):
 
     check_ip(ip)
     return send_command(f"unban {ip}")
-
-

@@ -35,25 +35,6 @@ async def read_jails():
 
 # ban a specific ip address in a jail
 @router.post("/{jail}/ban")
-async def ban_ip(jail: str, ip: str):
-    # check if the jail exists
-    jails = send_command("status")
-    jail_list = jails[1][1].split(", ")
-    if jail not in jail_list:
-        raise HTTPException(status_code=400, detail="Jail does not exist")
-
-    # control ip address
-    try:
-        socket.inet_aton(ip)
-    except socket.error:
-        raise HTTPException(status_code=400, detail="Invalid IP address")
-
-    result = send_command(f"set {jail} banip {ip}")
-    return result
-
-
-# unban a specific ip address in a jail
-@router.post("/{jail}/ban/{ip}")
 async def ban_ip_jail(jail: str, ip: str):
     # check if the jail exists and the ip is valid
     check_jails(jail)
@@ -64,13 +45,22 @@ async def ban_ip_jail(jail: str, ip: str):
 
 
 # unban a specific ip address in a jail
-@router.post("/{jail}/unban/{ip}")
+@router.post("/{jail}/unban")
 async def unban_ip_jail(jail: str, ip: str):
     # check if the jail exists and the ip is valid
     check_jails(jail)
     check_ip(ip)
 
     result = send_command(f"set {jail} unbanip {ip}")
+    return result
+
+# get jail bantime
+@router.get("/{jail}/bantime")
+async def get_bantime(jail: str):
+    # check if the jail exists
+    check_jails(jail)
+
+    result = send_command(f"get {jail} bantime")
     return result
 
 
@@ -84,6 +74,15 @@ async def set_bantime(jail: str, time: int):
     result = send_command(f"set {jail} bantime {time}")
     return result
 
+# get jail maxretry
+@router.get("/{jail}/maxretry")
+async def get_maxretry(jail: str):
+    # check if the jail exists
+    check_jails(jail)
+
+    result = send_command(f"get {jail} maxretry")
+    return result
+
 
 # set jail maxretry
 @router.post("/{jail}/maxretry/{maxretry}")
@@ -93,6 +92,15 @@ async def set_maxretry(jail: str, maxretry: int):
     check_int(maxretry)
 
     result = send_command(f"set {jail} maxretry {maxretry}")
+    return result
+
+# get jail maxmatches
+@router.get("/{jail}/maxmatches")
+async def get_maxmatches(jail: str):
+    # check if the jail exists
+    check_jails(jail)
+
+    result = send_command(f"get {jail} maxmatches")
     return result
 
 
@@ -107,6 +115,16 @@ async def set_maxmatches(jail: str, maxmatches: int):
     return result
 
 
+# get jail maxlines
+@router.get("/{jail}/maxlines")
+async def get_maxlines(jail: str):
+    # check if the jail exists
+    check_jails(jail)
+
+    result = send_command(f"get {jail} maxlines")
+    return result
+
+
 # set jail maxlines
 @router.post("/{jail}/maxlines/{maxlines}")
 async def set_maxlines(jail: str, maxlines: int):
@@ -116,3 +134,5 @@ async def set_maxlines(jail: str, maxlines: int):
 
     result = send_command(f"set {jail} maxlines {maxlines}")
     return result
+
+
