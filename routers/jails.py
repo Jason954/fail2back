@@ -1,4 +1,3 @@
-import json
 import socket
 from typing import List
 
@@ -85,6 +84,7 @@ async def set_bantime(jail: str, time: int):
     result = send_command(f"set {jail} bantime {time}")
     return result
 
+
 # set jail maxretry
 @router.post("/{jail}/maxretry/{maxretry}")
 async def set_maxretry(jail: str, maxretry: int):
@@ -95,6 +95,7 @@ async def set_maxretry(jail: str, maxretry: int):
     result = send_command(f"set {jail} maxretry {maxretry}")
     return result
 
+
 # set jail maxmatches
 @router.post("/{jail}/maxmatches/{maxmatches}")
 async def set_maxmatches(jail: str, maxmatches: int):
@@ -104,6 +105,7 @@ async def set_maxmatches(jail: str, maxmatches: int):
 
     result = send_command(f"set {jail} maxmatches {maxmatches}")
     return result
+
 
 # set jail maxlines
 @router.post("/{jail}/maxlines/{maxlines}")

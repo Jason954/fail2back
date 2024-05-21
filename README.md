@@ -16,11 +16,9 @@ This application uses environment variables for configuration. You need to creat
 SOCKET_PATH=/path/to/your/socket
 DB_PATH=/path/to/your/database
 ```
-Replace /path/to/your/socket and /path/to/your/database with the actual paths on your system.
+Replace `/path/to/your/socket` and `/path/to/your/database` with the actual paths on your system.
 - `SOCKET_PATH`: This is the path to the Fail2Ban socket file.
 - `DB_PATH`: This is the path to the SQLite database file used by Fail2Ban.
-
-Assurez-vous de remplacer `/path/to/your/socket` et `/path/to/your/database` par les chemins réels sur votre système.
 
 ## Installation
 
@@ -33,3 +31,28 @@ pip install -r requirements.txt
 ```bash
 uvicorn main:app --reload
 ```
+
+## Docker
+
+This application can be run using Docker. To build the Docker image, navigate to the project root directory and run the following command:
+
+```bash
+docker build -t fail2back .
+```
+
+This will build a Docker image named fail2back using the Dockerfile in the current directory.  To run the application using the built Docker image, use the following command:
+
+```bash
+docker run -d --name fail2back -p 8000:8000 --env-file .env fail2back
+```
+
+## Docker Compose
+This application can also be run using Docker Compose. This is particularly useful if you have multiple services that need to run in conjunction with this application.  To start the application with Docker Compose, navigate to the project root directory and run the following command:
+
+```bash 
+docker-compose up -d
+```
+
+This will start all services defined in the `docker-compose.yml` file. In this case, it will start the fail2back application in a Docker container, with the environment variables and port mappings defined in the docker-compose.yml file.  Remember to replace the environment variables in the docker-compose.yml file with the actual paths on your system:
+- `SOCKET_PATH`: This is the path to the Fail2Ban socket file.
+- `DB_PATH`: This is the path to the SQLite database file used by Fail2Ban.
