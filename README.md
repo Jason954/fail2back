@@ -53,6 +53,7 @@ This application can also be run using Docker Compose. This is particularly usef
 docker-compose up -d
 ```
 
-This will start all services defined in the `docker-compose.yml` file. In this case, it will start the fail2back application in a Docker container, with the environment variables and port mappings defined in the docker-compose.yml file.  Remember to replace the environment variables in the docker-compose.yml file with the actual paths on your system:
-- `SOCKET_PATH`: This is the path to the Fail2Ban socket file.
-- `DB_PATH`: This is the path to the SQLite database file used by Fail2Ban.
+This will start all services defined in the `docker-compose.yml` file. In this case, it will start the fail2back application in a Docker container, with the environment variables and port mappings defined in the docker-compose.yml file.  
+Remember to replace both volumes in the docker-compose.yml file with the actual paths on your system:
+- `/path/to/sock/fail2ban:/app/fail2ban.sock`: This is the path to the Fail2Ban socket file.
+- `/path/to/sqlite3/fail2ban:/app/fail2ban.sqlite3`: This is the path to the SQLite database file used by Fail2Ban.

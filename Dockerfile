@@ -5,8 +5,8 @@ ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 
 # Set two environment variables
-ENV SOCKET_PATH /app/socket
-ENV DB_PATH /app/db
+ENV SOCKET_PATH /app/fail2ban.sock
+ENV DB_PATH /app/fail2ban.sqlite3
 
 # Set work directory in the container
 WORKDIR /app

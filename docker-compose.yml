@@ -5,7 +5,5 @@ services:
     ports:
       - "8000:8000"
     volumes:
-      - .:/app
-    environment:
-      - SOCKET_PATH=/app/socket
-      - DB_PATH=/app/db
+      - /path/to/sock/fail2ban:/app/fail2ban.sock
+      - /path/to/sqlite3/fail2ban:/app/fail2ban.sqlite3
