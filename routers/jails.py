@@ -5,7 +5,6 @@ from typing import List
 from fastapi import APIRouter, HTTPException
 
 from dependencies import send_command
-from models.ip import Ip
 from models.jail import Jail
 from utils.check import check_jails, check_ip, check_int
 from utils.convert import convert_json_to_jail
@@ -56,7 +55,7 @@ async def ban_ip(jail: str, ip: str):
 
 # unban a specific ip address in a jail
 @router.post("/{jail}/ban/{ip}")
-async def ban_ip(jail: str, ip: str):
+async def ban_ip_jail(jail: str, ip: str):
     # check if the jail exists and the ip is valid
     check_jails(jail)
     check_ip(ip)
@@ -66,8 +65,8 @@ async def ban_ip(jail: str, ip: str):
 
 
 # unban a specific ip address in a jail
-@router.post("/{jail}/ban/{ip}")
-async def ban_ip(jail: str, ip: str):
+@router.post("/{jail}/unban/{ip}")
+async def unban_ip_jail(jail: str, ip: str):
     # check if the jail exists and the ip is valid
     check_jails(jail)
     check_ip(ip)
@@ -78,7 +77,7 @@ async def ban_ip(jail: str, ip: str):
 
 # set jail bantime
 @router.post("/{jail}/bantime/{time}")
-async def ban_ip(jail: str, time: int):
+async def set_bantime(jail: str, time: int):
     # check if the jail exists and the ip is valid
     check_jails(jail)
     check_int(time)

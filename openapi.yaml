@@ -1,0 +1,480 @@
+openapi: 3.1.0
+info:
+  title: FastAPI
+  version: 0.1.0
+paths:
+  /bans:
+    get:
+      tags:
+      - bans
+      summary: Read Bans
+      operationId: read_bans_bans_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/Ip'
+                type: array
+                title: Response Read Bans Bans Get
+        '404':
+          description: Not found
+  /unban:
+    post:
+      tags:
+      - bans
+      summary: Unban
+      operationId: unban_unban_post
+      parameters:
+      - name: ip
+        in: query
+        required: true
+        schema:
+          type: string
+          title: Ip
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '404':
+          description: Not found
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /jails:
+    get:
+      tags:
+      - jails
+      summary: Read Jails
+      operationId: read_jails_jails_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/Jail'
+                type: array
+                title: Response Read Jails Jails Get
+        '404':
+          description: Not found
+  /jails/{jail}/ban:
+    post:
+      tags:
+      - jails
+      summary: Ban Ip
+      operationId: ban_ip_jails__jail__ban_post
+      parameters:
+      - name: jail
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Jail
+      - name: ip
+        in: query
+        required: true
+        schema:
+          type: string
+          title: Ip
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '404':
+          description: Not found
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /jails/{jail}/ban/{ip}:
+    post:
+      tags:
+      - jails
+      summary: Ban Ip Jail
+      operationId: ban_ip_jail_jails__jail__ban__ip__post
+      parameters:
+      - name: jail
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Jail
+      - name: ip
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Ip
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '404':
+          description: Not found
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /jails/{jail}/unban/{ip}:
+    post:
+      tags:
+      - jails
+      summary: Unban Ip Jail
+      operationId: unban_ip_jail_jails__jail__unban__ip__post
+      parameters:
+      - name: jail
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Jail
+      - name: ip
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Ip
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '404':
+          description: Not found
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /jails/{jail}/bantime/{time}:
+    post:
+      tags:
+      - jails
+      summary: Set Bantime
+      operationId: set_bantime_jails__jail__bantime__time__post
+      parameters:
+      - name: jail
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Jail
+      - name: time
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Time
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '404':
+          description: Not found
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /jails/{jail}/maxretry/{maxretry}:
+    post:
+      tags:
+      - jails
+      summary: Set Maxretry
+      operationId: set_maxretry_jails__jail__maxretry__maxretry__post
+      parameters:
+      - name: jail
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Jail
+      - name: maxretry
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Maxretry
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '404':
+          description: Not found
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /jails/{jail}/maxmatches/{maxmatches}:
+    post:
+      tags:
+      - jails
+      summary: Set Maxmatches
+      operationId: set_maxmatches_jails__jail__maxmatches__maxmatches__post
+      parameters:
+      - name: jail
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Jail
+      - name: maxmatches
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Maxmatches
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '404':
+          description: Not found
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /jails/{jail}/maxlines/{maxlines}:
+    post:
+      tags:
+      - jails
+      summary: Set Maxlines
+      operationId: set_maxlines_jails__jail__maxlines__maxlines__post
+      parameters:
+      - name: jail
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Jail
+      - name: maxlines
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Maxlines
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '404':
+          description: Not found
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /globalbans:
+    get:
+      tags:
+      - globalbans
+      summary: Read Bans
+      operationId: read_bans_globalbans_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/Ban'
+                type: array
+                title: Response Read Bans Globalbans Get
+        '404':
+          description: Not found
+  /globalbans/{jail}:
+    get:
+      tags:
+      - globalbans
+      summary: Read Bans
+      operationId: read_bans_globalbans__jail__get
+      parameters:
+      - name: jail
+        in: path
+        required: true
+        schema:
+          title: Jail
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Ban'
+                title: Response Read Bans Globalbans  Jail  Get
+        '404':
+          description: Not found
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+components:
+  schemas:
+    Action:
+      properties:
+        currently_banned:
+          type: integer
+          title: Currently Banned
+        banned:
+          type: integer
+          title: Banned
+        ip_list:
+          anyOf:
+          - items:
+              $ref: '#/components/schemas/Ip'
+            type: array
+          - type: 'null'
+          title: Ip List
+      type: object
+      required:
+      - currently_banned
+      - banned
+      title: Action
+    Ban:
+      properties:
+        jail:
+          type: string
+          title: Jail
+        ip:
+          type: string
+          title: Ip
+        timeofban:
+          type: integer
+          title: Timeofban
+        data:
+          $ref: '#/components/schemas/BanInfo'
+      type: object
+      required:
+      - jail
+      - ip
+      - timeofban
+      - data
+      title: Ban
+    BanInfo:
+      properties:
+        matches:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Matches
+        failures:
+          type: integer
+          title: Failures
+      type: object
+      required:
+      - failures
+      title: BanInfo
+    Filter:
+      properties:
+        currently_failed:
+          type: integer
+          title: Currently Failed
+        failed:
+          type: integer
+          title: Failed
+        file_list:
+          items:
+            type: string
+          type: array
+          title: File List
+      type: object
+      required:
+      - currently_failed
+      - failed
+      - file_list
+      title: Filter
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    Ip:
+      properties:
+        ip:
+          type: string
+          title: Ip
+      type: object
+      required:
+      - ip
+      title: Ip
+    Jail:
+      properties:
+        name:
+          type: string
+          title: Name
+        filter:
+          anyOf:
+          - $ref: '#/components/schemas/Filter'
+          - type: 'null'
+        actions:
+          anyOf:
+          - $ref: '#/components/schemas/Action'
+          - type: 'null'
+      type: object
+      required:
+      - name
+      title: Jail
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
