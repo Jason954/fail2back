@@ -4,6 +4,6 @@ from pydantic import BaseModel
 
 
 class BanInfo(BaseModel):
-    matches: Optional[List[int]] = None
+    matches: Optional[List[str]] = None
     failures: int
 

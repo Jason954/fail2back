@@ -30,6 +30,5 @@ async def read_jails():
             jail_info = send_command(f"status {jail_name}")
             jail_entity = convert_json_to_jail(jail_name, jail_info)
             # create a new jail object
-            print(type(jail_entity))
             jails.append(jail_entity)
     return jails

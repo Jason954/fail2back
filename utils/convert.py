@@ -1,3 +1,5 @@
+import json
+
 from models.action import Action
 from models.filter import Filter
 from models.ip import Ip
@@ -24,3 +26,23 @@ def convert_json_to_jail(name, json_data):
                 ip_list=ip_list
             )
     return Jail(name=name, filter=filter_data, actions=action_data)
+
+
+def convert_query_to_ban_model(result):
+    ban_list = []
+
+    for item in result:
+        item["data"] = json.loads(item["data"])
+        # Check data and convert in string if it is a dict
+        for data in item["data"].items():
+            if data[0] is not None and data[0] == "matches":
+                index = 0
+                for match in data[1]:
+                    # if match is a list convert into string
+                    if type(match) is list:
+                        match = "".join(match)
+                        # replace the match in the data
+                        item["data"]["matches"][index] = match
+                    index += 1
+        ban_list.append(item)
+    return ban_list

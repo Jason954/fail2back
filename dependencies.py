@@ -1,5 +1,4 @@
 import traceback
-import json
 import os
 import pickle
 import socket
@@ -30,15 +29,15 @@ def send_command(command):
         command = pickle.dumps(command)
 
         client.sendall(command)
-
         # send end_command to tell the socket that the command is over
         client.sendall(END_COMMAND.encode())
+
         response = client.recv(4096)
         # convert response pickle into json
         response = pickle.loads(response)
         # Afficher la réponse
         print("Réponse du socket Fail2Ban:", response)
-        # Fermer la connexion
+
         client.close()
         return response[1]
     except Exception as e:
@@ -71,6 +70,8 @@ def query_db(query, args=()):
     cur = conn.cursor()
     cur.execute(query, args)
     rv = cur.fetchall()
+    # iterate over the rows and convert them to a dictionary
+    rv = [dict(row) for row in rv]
     cur.close()
     conn.close()
     return rv
