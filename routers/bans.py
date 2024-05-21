@@ -6,16 +6,17 @@ from fastapi import APIRouter
 from dependencies import send_command, query_db
 from models.ban import Ban
 from models.ip import Ip
+from utils.check import check_ip
 from utils.convert import convert_query_to_ban_model
 
 router = APIRouter(
-    prefix="/bans",
+    # prefix="/bans",
     tags=["bans"],
     responses={404: {"description": "Not found"}},
 )
 
 
-@router.get("", response_model=List[Ip])
+@router.get("/bans", response_model=List[Ip])
 async def read_bans():
     banned = send_command("banned")
     if banned is not None and len(banned):
@@ -29,18 +30,12 @@ async def read_bans():
     return [Ip(ip=ip) for ip in banned_return]
 
 
-@router.get("/all", response_model=List[Ban])
-async def read_bans():
-    result = query_db("select jail, ip, timeofban, data from bans")
-    ban_list = convert_query_to_ban_model(result)
+@router.post("/unban")
+async def unban(ip: str):
+    if ip == "all":
+        return send_command("unban --all")
 
-    bans = [Ban(**item) for item in ban_list]
-    return bans
+    check_ip(ip)
+    return send_command(f"unban {ip}")
 
 
-@router.get("/{jail}", response_model=List[Ban])
-async def read_bans(jail):
-    result = query_db(f"select jail, ip, timeofban, data from bans where jail = '{jail}'")
-    ban_list = convert_query_to_ban_model(result)
-    bans = [Ban(**item) for item in ban_list]
-    return bans

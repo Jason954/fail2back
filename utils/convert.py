@@ -46,3 +46,4 @@ def convert_query_to_ban_model(result):
                     index += 1
         ban_list.append(item)
     return ban_list
+
