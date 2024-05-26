@@ -1,7 +1,4 @@
-from typing import Union
-
-from fastapi import FastAPI, Response
-
+from fastapi import FastAPI
 from routers import bans, status, jails, globalbans
 # import routers
 app = FastAPI()

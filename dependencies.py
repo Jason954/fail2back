@@ -9,9 +9,11 @@ from dotenv import load_dotenv
 END_COMMAND = "<F2B_END_COMMAND>"
 load_dotenv()
 
-socket_path = os.getenv("SOCKET_PATH")
+socket_path = os.getenv("SOCKET_PATH")+"/fail2ban.sock"
 db_path = os.getenv("DB_PATH")
 
+print("Socket Path:", socket_path)
+print("DB Path:", db_path)
 
 def send_command(command):
     try:

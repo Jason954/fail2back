@@ -1,9 +1,9 @@
-import socket
 from typing import List
 
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter
 
 from dependencies import send_command
+from models.action import Action
 from models.jail import Jail
 from utils.check import check_jails, check_ip, check_int
 from utils.convert import convert_json_to_jail
@@ -54,6 +54,7 @@ async def unban_ip_jail(jail: str, ip: str):
     result = send_command(f"set {jail} unbanip {ip}")
     return result
 
+
 # get jail bantime
 @router.get("/{jail}/bantime")
 async def get_bantime(jail: str):
@@ -74,6 +75,7 @@ async def set_bantime(jail: str, time: int):
     result = send_command(f"set {jail} bantime {time}")
     return result
 
+
 # get jail maxretry
 @router.get("/{jail}/maxretry")
 async def get_maxretry(jail: str):
@@ -93,6 +95,7 @@ async def set_maxretry(jail: str, maxretry: int):
 
     result = send_command(f"set {jail} maxretry {maxretry}")
     return result
+
 
 # get jail maxmatches
 @router.get("/{jail}/maxmatches")
@@ -136,3 +139,43 @@ async def set_maxlines(jail: str, maxlines: int):
     return result
 
 
+# get jails actions
+@router.get("/{jail}/actions", response_model=List[Action])
+async def get_actions(jail: str):
+    # check if the jail exists
+    check_jails(jail)
+
+    result = send_command(f"get {jail} actions")
+    return result
+
+
+# set jail addignoreip
+@router.post("/{jail}/addignoreip/{ip}")
+async def add_ignore_ip(jail: str, ip: str):
+    # check if the jail exists and the ip is valid
+    check_jails(jail)
+    check_ip(ip)
+
+    result = send_command(f"set {jail} addignoreip {ip}")
+    return result
+
+
+# get jail ignoreip
+@router.get("/{jail}/ignoreip")
+async def get_ignore_ip(jail: str):
+    # check if the jail exists
+    check_jails(jail)
+
+    result = send_command(f"get {jail} ignoreip")
+    return result
+
+
+# set jail delignoreip
+@router.post("/{jail}/delignoreip/{ip}")
+async def del_ignore_ip(jail: str, ip: str):
+    # check if the jail exists and the ip is valid
+    check_jails(jail)
+    check_ip(ip)
+
+    result = send_command(f"set {jail} delignoreip {ip}")
+    return result
