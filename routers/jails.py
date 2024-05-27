@@ -144,9 +144,16 @@ async def set_maxlines(jail: str, maxlines: int):
 async def get_actions(jail: str):
     # check if the jail exists
     check_jails(jail)
-
     result = send_command(f"get {jail} actions")
-    return result
+    actions = []
+    # check if the result is not empty
+    if result[0] is not None:
+        # split the actions into a list
+        for action in result:
+            # create a new action object
+            action_entity = Action(name=action)
+            actions.append(action_entity)
+    return actions
 
 
 # set jail addignoreip

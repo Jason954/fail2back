@@ -8,7 +8,7 @@ from models.jail import Jail
 
 def convert_json_to_jail(name, json_data):
     filter_data = None
-    action_data = None
+    stats_data = None
     for data_item in json_data:
         if data_item[0] == "Filter":
             filter_data = Filter(
@@ -20,12 +20,12 @@ def convert_json_to_jail(name, json_data):
             ip_list = []
             for ip in data_item[1][2][1]:
                 ip_list.append(Ip(ip=ip))
-            action_data = Stats(
+            stats_data = Stats(
                 currently_banned=data_item[1][0][1],
                 banned=data_item[1][1][1],
                 ip_list=ip_list
             )
-    return Jail(name=name, filter=filter_data, actions=action_data)
+    return Jail(name=name, filter=filter_data, stats=stats_data)
 
 
 def convert_query_to_ban_model(result):

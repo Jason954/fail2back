@@ -5,5 +5,5 @@ services:
     ports:
       - "8000:8000"
     volumes:
-      - /path/to/sock/fail2ban:/app/fail2ban.sock
+      - /path/to/sock/fail2ban:/app/socket
       - /path/to/sqlite3/fail2ban:/app/fail2ban.sqlite3
