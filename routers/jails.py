@@ -3,6 +3,7 @@ from typing import List
 from fastapi import APIRouter
 
 from dependencies import send_command
+from enums.order import Order
 from models.action import Action
 from models.jail import Jail
 from utils.check import check_jails, check_ip, check_int
@@ -16,7 +17,7 @@ router = APIRouter(
 
 
 @router.get("", response_model=List[Jail])
-async def read_jails():
+async def read_jails(order: Order = None, limit: int = None, offset: int = 0):
     status = send_command("status")
     jails = []
     # check if number of jails is greater than 0
@@ -30,6 +31,13 @@ async def read_jails():
             jail_entity = convert_json_to_jail(jail_name, jail_info)
             # create a new jail object
             jails.append(jail_entity)
+
+    if Order is not None:
+        jails.sort(key=lambda x: x.name, reverse=order == Order.desc)
+
+    if limit is not None:
+        # limit the jails
+        jails = jails[offset:offset + limit]
     return jails
 
 

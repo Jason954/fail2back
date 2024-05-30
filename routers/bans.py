@@ -4,6 +4,7 @@ from typing import List
 from fastapi import APIRouter
 
 from dependencies import send_command, query_db
+from enums.order import Order
 from models.ban import Ban
 from models.ip import Ip
 from models.jail import Jail
@@ -18,7 +19,7 @@ router = APIRouter(
 
 
 @router.get("/bans", response_model=List[Ip])
-async def read_bans():
+async def read_bans(order: Order = None, limit: int = None, offset: int = 0):
     banned = send_command("banned")
     if banned is not None and len(banned):
         ip_list = []
@@ -28,6 +29,11 @@ async def read_bans():
         banned_return = ip_list
     else:
         banned_return = []
+    if order is not None:
+        banned_return.sort(reverse=order == "desc")
+    if limit is not None:
+        banned_return = banned_return[offset:offset + limit]
+
     return [Ip(ip=ip) for ip in banned_return]
 
 
