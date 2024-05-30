@@ -4,6 +4,11 @@ services:
     build: .
     ports:
       - "8000:8000"
+    environment:
+      # Interval in minutes to feed the stats to the database
+      - SCHEDULE_INTERVAL=1
     volumes:
       - /path/to/sock/fail2ban:/app/socket
       - /path/to/sqlite3/fail2ban:/app/fail2ban.sqlite3
+      # Uncomment the following line to persist the stats
+      # - /path/to/fail2back/stats.db:/app/stats.db

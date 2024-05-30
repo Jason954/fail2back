@@ -7,7 +7,7 @@ from enums.order import Order
 from models.action import Action
 from models.jail import Jail
 from utils.check import check_jails, check_ip, check_int
-from utils.convert import convert_json_to_jail
+from utils.convert import convert_json_to_jail, convert_command_result_to_jail_entities
 
 router = APIRouter(
     prefix="/jails",
@@ -21,16 +21,7 @@ async def read_jails(order: Order = None, limit: int = None, offset: int = 0):
     status = send_command("status")
     jails = []
     # check if number of jails is greater than 0
-    if status[0] is not None and status[0][1] > 0:
-        # get list of jails
-        list_of_jails = status[1][1].split(", ")
-        for jail in list_of_jails:
-            # get the name of the jail
-            jail_name = jail
-            jail_info = send_command(f"status {jail_name}")
-            jail_entity = convert_json_to_jail(jail_name, jail_info)
-            # create a new jail object
-            jails.append(jail_entity)
+    convert_command_result_to_jail_entities(jails, status)
 
     if Order is not None:
         jails.sort(key=lambda x: x.name, reverse=order == Order.desc)

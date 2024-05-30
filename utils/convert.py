@@ -1,5 +1,6 @@
 import json
 
+from dependencies import send_command
 from models.stats import Stats
 from models.filter import Filter
 from models.ip import Ip
@@ -47,3 +48,15 @@ def convert_query_to_ban_model(result):
         ban_list.append(item)
     return ban_list
 
+
+def convert_command_result_to_jail_entities(jails, status):
+    if status[0] is not None and status[0][1] > 0:
+        # get list of jails
+        list_of_jails = status[1][1].split(", ")
+        for jail in list_of_jails:
+            # get the name of the jail
+            jail_name = jail
+            jail_info = send_command(f"status {jail_name}")
+            jail_entity = convert_json_to_jail(jail_name, jail_info)
+            # create a new jail object
+            jails.append(jail_entity)
