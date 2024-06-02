@@ -6,7 +6,7 @@ from fastapi import HTTPException
 
 
 class Database:
-    acceptable_units = ["day", "week", "month", "year"]
+    acceptable_units = ["hour", "day", "week", "month", "year"]
 
     def __init__(self):
         self.db_name = os.environ["DB_STATS_PATH"]
@@ -64,10 +64,13 @@ class Database:
             raise HTTPException(status_code=400, detail="Invalid unit")
 
             # Convert end_date to datetime object
-        end_date = datetime.strptime(end_date, "%Y-%m-%d")
+        end_date = datetime.strptime(end_date, "%Y-%m-%d %H:%M:%S")
 
         # Calculate start_date
-        if unit == "day":
+        if unit == "hour":
+            start_date = end_date - timedelta(hours=interval)
+            date_format = "%Y-%m-%d %H"
+        elif unit == "day":
             start_date = end_date - timedelta(days=interval)
             date_format = "%Y-%m-%d"
         elif unit == "week":
@@ -91,3 +94,48 @@ class Database:
         conn.close()
 
         return result
+
+    def get_history(self, end_date, unit, interval):
+        global date_format
+        if unit not in self.acceptable_units:
+            # throw bad request error
+            raise HTTPException(status_code=400, detail="Invalid unit")
+
+            # Convert end_date to datetime object
+        end_date = datetime.strptime(end_date, "%Y-%m-%d %H:%M:%S")
+
+        # Calculate start_date
+        date_format, start_date = self.define_date_format_start_date(unit, interval, end_date)
+        # create a connection to the database
+        conn = sqlite3.connect(self.db_name)
+        # create a cursor object
+        c = conn.cursor()
+        # get the stats from the jail_stats table
+        c.execute(f"SELECT strftime('{date_format}', date), concern, MAX(value) FROM jail_stats WHERE date BETWEEN ? AND ? GROUP BY strftime('{date_format}', date), concern", (start_date, end_date))
+        result = c.fetchall()
+        # close the connection
+        conn.close()
+
+        return result
+
+    def define_date_format_start_date(self, unit, interval, end_date):
+        start_date = None
+        format_date = None
+        if unit == "hour":
+            start_date = end_date - timedelta(hours=interval)
+            format_date = "%Y-%m-%d %H"
+        elif unit == "day":
+            start_date = end_date - timedelta(days=interval)
+            format_date = "%Y-%m-%d"
+        elif unit == "week":
+            start_date = end_date - timedelta(weeks=interval)
+            format_date = "%Y-%W"
+        elif unit == "month":
+            start_date = end_date - timedelta(days=30 * interval)
+            format_date = "%Y-%m"
+        elif unit == "year":
+            start_date = end_date - timedelta(days=365 * interval)  # approximate
+            format_date = "%Y"
+
+        return format_date, start_date
+

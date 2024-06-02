@@ -60,3 +60,12 @@ def convert_command_result_to_jail_entities(jails, status):
             jail_entity = convert_json_to_jail(jail_name, jail_info)
             # create a new jail object
             jails.append(jail_entity)
+
+
+def convert_stats_formatted(stats):
+    formatted_stats = {}
+    for stat in stats:
+        if stat[1] not in formatted_stats:
+            formatted_stats[stat[1]] = {}
+        formatted_stats[stat[1]][stat[2]] = stat[3]
+    return formatted_stats
