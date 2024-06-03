@@ -1,6 +1,10 @@
+import json
 from typing import List
 
 from fastapi import APIRouter
+from fastapi.encoders import jsonable_encoder
+from pydantic.v1 import parse_raw_as
+from starlette.responses import JSONResponse
 
 from dependencies import send_command
 from enums.order import Order
@@ -16,12 +20,26 @@ router = APIRouter(
 )
 
 
-@router.get("", response_model=List[Jail])
+@router.get("", response_model=List[Jail],
+            responses={
+                200: {
+                    "description": "List of jails",
+                    "headers": {
+                        "X-Total-Count": {
+                            "description": "The total number of jails",
+                            "schema": {
+                                "type": "integer"
+                            }
+                        }
+                    }
+                }
+            })
 async def read_jails(order: Order = None, limit: int = None, offset: int = 0):
     status = send_command("status")
     jails = []
     # check if number of jails is greater than 0
     convert_command_result_to_jail_entities(jails, status)
+    headers = {"X-Total-Count": str(len(jails))}
 
     if Order is not None:
         jails.sort(key=lambda x: x.name, reverse=order == Order.desc)
@@ -29,7 +47,8 @@ async def read_jails(order: Order = None, limit: int = None, offset: int = 0):
     if limit is not None:
         # limit the jails
         jails = jails[offset:offset + limit]
-    return jails
+
+    return JSONResponse(content=jsonable_encoder(jails), headers=headers)
 
 
 # ban a specific ip address in a jail

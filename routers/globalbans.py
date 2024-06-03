@@ -2,10 +2,12 @@ import json
 from typing import List
 
 from fastapi import APIRouter
+from starlette.responses import JSONResponse
 
 from dependencies import query_db
 from enums.order import Order
 from models.ban import Ban
+from utils.common import return_response_sorted_bans
 from utils.convert import convert_query_to_ban_model
 
 router = APIRouter(
@@ -15,24 +17,45 @@ router = APIRouter(
 )
 
 
-@router.get("", response_model=List[Ban])
+@router.get("",
+            response_model=List[Ban],
+            responses={
+                200: {
+                    "description": "List of globalbans",
+                    "headers": {
+                        "X-Total-Count": {
+                            "description": "The total number of globalbans",
+                            "schema": {
+                                "type": "integer"
+                            }
+                        }
+                    }
+                }
+            })
 async def read_bans(sort: str = None, order: Order = None, limit: int = None, offset: int = 0):
     result = query_db("select jail, ip, timeofban, data from bans")
     ban_list = convert_query_to_ban_model(result)
-    if sort is not None:
-        if order is None:
-            order = Order.asc
-        ban_list.sort(key=lambda x: x[sort], reverse=order == Order.desc)
-    if limit is not None:
-        ban_list = ban_list[offset:offset + limit]
-    bans = [Ban(**item) for item in ban_list]
+    return return_response_sorted_bans(ban_list, sort, order, limit, offset)
 
 
-    return bans
-
-@router.get("/{jail}", response_model=List[Ban])
-async def read_bans(jail):
+@router.get("/{jail}",
+            response_model=List[Ban],
+            responses={
+                200: {
+                    "description": "List of globalbans",
+                    "headers": {
+                        "X-Total-Count": {
+                            "description": "The total number of globalbans",
+                            "schema": {
+                                "type": "integer"
+                            }
+                        }
+                    }
+                }
+            }
+            )
+async def read_bans_by_jail(jail: str, sort: str = None, order: Order = None, limit: int = None, offset: int = 0):
     result = query_db(f"select jail, ip, timeofban, data from bans where jail = '{jail}'")
     ban_list = convert_query_to_ban_model(result)
-    bans = [Ban(**item) for item in ban_list]
-    return bans
+    return return_response_sorted_bans(ban_list, sort, order, limit, offset)
+
