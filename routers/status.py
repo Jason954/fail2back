@@ -8,7 +8,7 @@ from models.ban import Ban
 from models.ip import Ip
 from models.jail import Jail
 from utils.check import check_ip
-from utils.convert import convert_query_to_ban_model, convert_json_to_jail
+from utils.convert import convert_json_to_jail
 
 router = APIRouter(
     prefix="/status",
