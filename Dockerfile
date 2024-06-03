@@ -9,7 +9,7 @@ RUN date
 # Set two environment variables
 ENV SOCKET_PATH /app/socket
 ENV DB_PATH /app/fail2ban.sqlite3
-ENV DB_STATS_PATH /app/stats.db
+ENV DB_STATS_PATH /app/db/stats.db
 
 # Set work directory in the container
 WORKDIR /app

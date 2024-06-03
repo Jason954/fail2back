@@ -11,4 +11,4 @@ services:
       - /path/to/sock/fail2ban:/app/socket
       - /path/to/sqlite3/fail2ban:/app/fail2ban.sqlite3
       # Uncomment the following line to persist the stats
-      # - /path/to/fail2back/stats.db:/app/stats.db
+      # - /path/to/fail2back/data/db:/app/db

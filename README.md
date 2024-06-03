@@ -55,7 +55,7 @@ docker-compose up -d
 
 This will start all services defined in the `docker-compose.yml` file. In this case, it will start the fail2back application in a Docker container, with the environment variables and port mappings defined in the docker-compose.yml file.  
 Remember to replace both volumes in the docker-compose.yml file with the actual paths on your system:
-- `/path/to/sock/fail2ban:/app/socket`: This is the path to the Fail2Ban socket folderg.
+- `/path/to/sock/fail2ban:/app/socket`: This is the path to the Fail2Ban socket folder.
 - `/path/to/sqlite3/fail2ban:/app/fail2ban.sqlite3`: This is the path to the SQLite database file used by Fail2Ban.
 
 ## Implements stats Fail2Ban
@@ -63,12 +63,12 @@ If you want to implement stats for Fail2Ban, you have to use Docker Compose.
 This will start the fail2back application in a Docker container with script "start.sh" that will start the scheduler for the stats.
 Otherwise, you can run the script "start.sh" in the root directory of the project, or use crontab to run the script "scheduler.py" every X minutes.
 
-You have to set the environment variable `SCHEDULE_INTERVAL` in the docker-compose.yml file or in the .env file to set the interval of the scheduler.
-Uncomment the volume in the docker-compose.yml file to save the stats in a file.
+²You have to set the environment variable `SCHEDULE_INTERVAL` in the docker-compose.yml file or in the .env file to set the interval of the scheduler.
+Uncomment the volume in the docker-compose.yml file to save the stats db in a file.
 ```bash
 ...
 volumes:
   ...
-  # uncomment the following line to save the stats in a file
-  - /path/to/fail2back/stats.db:/app/stats.db
+  # uncomment the following line to save the stats in a file      
+  # - /path/to/fail2back/data/db:/app/db
 ```
