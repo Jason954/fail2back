@@ -1,11 +1,11 @@
-from typing import List, Annotated
+from typing import List, Annotated, Dict, Union
 
 from fastapi import APIRouter, Header, Response
 from starlette.responses import JSONResponse
 
 from dependencies import query_db
 from enums.order import Order
-from models.fail import Fail
+from models.fail import Fail, FailGroupByFields
 from utils.check import check_jails
 
 router = APIRouter(
@@ -16,7 +16,7 @@ router = APIRouter(
 
 
 @router.get("",
-            response_model=List[Fail],
+            response_model=Union[List[Fail], Dict[str, List[Fail]]],
             responses={
                 200: {
                     "description": "List of fails",
@@ -31,8 +31,22 @@ router = APIRouter(
                 }
             }
             )
-async def read_fails(sort: str = None, order: Order = None, limit: int = None, offset: int = 0):
+async def read_fails(sort: str = None, order: Order = None, limit: int = None, offset: int = 0,
+                     group_by: FailGroupByFields = None
+                     ):
     fails = query_db("select jail, ip, timeoffail, match from fails")
+
+    if group_by is not None and group_by in FailGroupByFields:
+        # organise ban list by jail
+        fail_map = {}
+        for ban in fails:
+            if ban[group_by] not in fail_map:
+                fail_map[ban[group_by]] = []
+            # remove jail from ban object
+            fail_map[ban[group_by]].append(ban)
+
+        return fail_map
+
     return return_response_sorted_fails(fails, sort, order, limit, offset)
 
 
