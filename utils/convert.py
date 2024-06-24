@@ -69,3 +69,18 @@ def convert_stats_formatted(stats):
             formatted_stats[stat[1]] = {}
         formatted_stats[stat[1]][stat[2]] = stat[3]
     return formatted_stats
+
+
+def aggregate_stats(stats):
+    if len(stats) == 0:
+        return None
+    aggregated_stats = {}
+    for jail, jail_stats in stats.items():
+        for date, date_stats in jail_stats.items():
+            if date not in aggregated_stats:
+                aggregated_stats[date] = {}
+            for key, value in date_stats.items():
+                if key not in aggregated_stats[date]:
+                    aggregated_stats[date][key] = 0
+                aggregated_stats[date][key] += value
+    return aggregated_stats
